@@ -27,7 +27,7 @@
 #include <Qt3DRender/QFilterKey>
 #include <Qt3DRender/QTechnique>
 #include <Qt3DRender/QRenderPass>
-#include <Qt3DRender/QBuffer>
+#include <Qt3DCore/QBuffer>
 #include <Qt3DRender/QGraphicsApiFilter>
 
 //*************************************************************************************************************
@@ -74,7 +74,7 @@ ComputeMaterial::ComputeMaterial(Qt3DCore::QNode *parent)
 
 //*************************************************************************************************************
 
-void ComputeMaterial::setVertexBuffer(Qt3DRender::QBuffer *inBuffer)
+void ComputeMaterial::setVertexBuffer(Qt3DCore::QBuffer *inBuffer)
 {
     m_pParticlesParameter->setName(QStringLiteral("Particles"));
     
@@ -92,23 +92,23 @@ void ComputeMaterial::init()
 {
     //Compute part
     //Set shader
-    m_pComputeShader->setComputeShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/particles.csh"))));
+    // m_pComputeShader->setComputeShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/particles.csh"))));
 
-    m_pComputeRenderPass->setShaderProgram(m_pComputeShader);
+    // m_pComputeRenderPass->setShaderProgram(m_pComputeShader);
 
     //Set OpenGL version
-    m_pComputeTechnique->graphicsApiFilter()->setApi(QGraphicsApiFilter::OpenGL);
-    m_pComputeTechnique->graphicsApiFilter()->setMajorVersion(4);
-    m_pComputeTechnique->graphicsApiFilter()->setMinorVersion(3);
-    m_pComputeTechnique->graphicsApiFilter()->setProfile(QGraphicsApiFilter::CoreProfile);
+    // m_pComputeTechnique->graphicsApiFilter()->setApi(QGraphicsApiFilter::RHI);
+    // m_pComputeTechnique->graphicsApiFilter()->setMajorVersion(1);
+    // m_pComputeTechnique->graphicsApiFilter()->setMinorVersion(0);
+    // m_pComputeTechnique->graphicsApiFilter()->setProfile(QGraphicsApiFilter::NoProfile);
 
-    //Set filter Keys
-    m_pComputeFilterKey->setName(QStringLiteral("type"));
-    m_pComputeFilterKey->setValue(QStringLiteral("compute"));
+    // //Set filter Keys
+    // m_pComputeFilterKey->setName(QStringLiteral("type"));
+    // m_pComputeFilterKey->setValue(QStringLiteral("compute"));
 
-    //Add to technique
-    m_pComputeTechnique->addFilterKey(m_pComputeFilterKey);
-    m_pComputeTechnique->addRenderPass(m_pComputeRenderPass);
+    // //Add to technique
+    // m_pComputeTechnique->addFilterKey(m_pComputeFilterKey);
+    // m_pComputeTechnique->addRenderPass(m_pComputeRenderPass);
 
     //Draw part
     //Set shader
@@ -118,10 +118,10 @@ void ComputeMaterial::init()
     m_pDrawRenderPass->setShaderProgram(m_pDrawShader);
 
     //Set OpenGL version
-    m_pDrawTechnique->graphicsApiFilter()->setApi(QGraphicsApiFilter::OpenGL);
-    m_pDrawTechnique->graphicsApiFilter()->setMajorVersion(4);
-    m_pDrawTechnique->graphicsApiFilter()->setMinorVersion(3);
-    m_pDrawTechnique->graphicsApiFilter()->setProfile(QGraphicsApiFilter::CoreProfile);
+    m_pDrawTechnique->graphicsApiFilter()->setApi(QGraphicsApiFilter::RHI);
+    m_pDrawTechnique->graphicsApiFilter()->setMajorVersion(1);
+    m_pDrawTechnique->graphicsApiFilter()->setMinorVersion(0);
+    m_pDrawTechnique->graphicsApiFilter()->setProfile(QGraphicsApiFilter::NoProfile);
 
     //Set filter Keys
     m_pDrawFilterKey->setName(QStringLiteral("type"));
@@ -133,7 +133,7 @@ void ComputeMaterial::init()
 
     //Effect
     //Link shader and uniforms
-    m_pEffect->addTechnique(m_pComputeTechnique);
+    // m_pEffect->addTechnique(m_pComputeTechnique);
     m_pEffect->addTechnique(m_pDrawTechnique);
 
     //Add to material

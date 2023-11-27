@@ -83,7 +83,7 @@ public:
      *
      * @param inBuffer
      */
-    void setVertexBuffer(Qt3DRender::QBuffer *inBuffer);
+    void setVertexBuffer(Qt3DCore::QBuffer *inBuffer);
 
 
 protected:

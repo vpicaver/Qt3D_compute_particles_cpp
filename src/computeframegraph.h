@@ -39,6 +39,7 @@ namespace Qt3DRender {
     class QCamera;
     class QFilterKey;
     class QMemoryBarrier;
+    class QDebugOverlay;
 }
 
 namespace Qt3DCore {
@@ -64,7 +65,7 @@ namespace COMPUTESHADER {
 * Framegraph for compzte shaders.
 */
 
-class ComputeFramegraph : public Qt3DRender::QViewport
+class ComputeFramegraph : public Qt3DRender::QFrameGraphNode //Qt3DRender::QViewport
 {
 
 public:
@@ -98,8 +99,8 @@ private:
      */
     void init();
     
-
     QPointer<Qt3DRender::QRenderSurfaceSelector> m_pSurfaceSelector;
+    QPointer<Qt3DRender::QViewport> m_pViewport;
 
     QPointer<Qt3DRender::QClearBuffers> m_pClearBuffers;
 
@@ -115,8 +116,9 @@ private:
     QPointer<Qt3DRender::QTechniqueFilter> m_pComputeFilter;
     QPointer<Qt3DRender::QTechniqueFilter> m_pDrawFilter;
 
+    QPointer<Qt3DRender::QDebugOverlay> m_pDebugOverlay;
 
-
+    //Doesn't work with RHI
     QPointer<Qt3DRender::QMemoryBarrier> m_pMemoryBarrier;
 };
 

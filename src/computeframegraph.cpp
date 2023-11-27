@@ -30,6 +30,7 @@
 #include <Qt3DRender/QFilterKey>
 #include <Qt3DRender/QMemoryBarrier>
 #include <Qt3DRender/QViewport>
+#include <Qt3DRender/QDebugOverlay>
 #include <Qt3DCore/QNode>
 
 //*************************************************************************************************************
@@ -45,16 +46,20 @@ using namespace Qt3DRender;
 // DEFINE MEMBER METHODS
 //=============================================================================================================
 
+
 ComputeFramegraph::ComputeFramegraph(Qt3DCore::QNode *parent)
-    : QViewport(parent)
+    //: QViewport(parent)
+    : Qt3DRender::QFrameGraphNode(parent)
     , m_pSurfaceSelector(new QRenderSurfaceSelector(this))
-    , m_pClearBuffers(new QClearBuffers(m_pSurfaceSelector))
+    // , m_pDispatchCompute(new QDispatchCompute(m_pSurfaceSelector))
+    // , m_pComputeFilter(new QTechniqueFilter(m_pDispatchCompute))
+    , m_pViewport(new QViewport(m_pSurfaceSelector))
+    , m_pCameraSelector(new QCameraSelector(m_pViewport))
+    , m_pClearBuffers(new QClearBuffers(m_pViewport))
     , m_pNoDraw(new QNoDraw(m_pClearBuffers))
-    , m_pDispatchCompute(new QDispatchCompute(m_pSurfaceSelector))
-    , m_pComputeFilter(new QTechniqueFilter(m_pDispatchCompute))
-    , m_pCameraSelector(new QCameraSelector(m_pSurfaceSelector))
     , m_pDrawFilter(new QTechniqueFilter(m_pCameraSelector))
-    , m_pMemoryBarrier(new QMemoryBarrier(m_pDrawFilter))
+    // , m_pDebugOverlay(new QDebugOverlay(m_pCameraSelector))
+//    , m_pMemoryBarrier(new QMemoryBarrier(m_pDrawFilter))
     , m_pDrawKey(new QFilterKey)
     , m_pComputeKey(new QFilterKey)
 {
@@ -66,9 +71,9 @@ ComputeFramegraph::ComputeFramegraph(Qt3DCore::QNode *parent)
 
 void ComputeFramegraph::setWorkGroups(const int x, const int y, const int z)
 {
-    m_pDispatchCompute->setWorkGroupX(x);
-    m_pDispatchCompute->setWorkGroupY(y);
-    m_pDispatchCompute->setWorkGroupZ(z);
+    // m_pDispatchCompute->setWorkGroupX(x);
+    // m_pDispatchCompute->setWorkGroupY(y);
+    // m_pDispatchCompute->setWorkGroupZ(z);
 }
 
 //*************************************************************************************************************
@@ -84,16 +89,16 @@ void ComputeFramegraph::setCamera(QCamera *pCamera)
 
 void ComputeFramegraph::init()
 {
-    this->setNormalizedRect(QRectF(0.0f, 0.0f, 1.0f, 1.0f));
+    m_pViewport->setNormalizedRect(QRectF(0.0f, 0.0f, 1.0f, 1.0f));
 
     //Set ClearBuffers
     m_pClearBuffers->setBuffers(QClearBuffers::ColorDepthBuffer);
-    m_pClearBuffers->setClearColor(Qt::black);
+    m_pClearBuffers->setClearColor("#77afff"); //Qt::black);
 
-    //Set Workgroup size
-    m_pDispatchCompute->setWorkGroupX(50);
-    m_pDispatchCompute->setWorkGroupY(1);
-    m_pDispatchCompute->setWorkGroupZ(1);
+    // //Set Workgroup size
+    // m_pDispatchCompute->setWorkGroupX(50);
+    // m_pDispatchCompute->setWorkGroupY(1);
+    // m_pDispatchCompute->setWorkGroupZ(1);
 
     //Set FilterKeys
     m_pComputeKey->setName(QStringLiteral("type"));
@@ -103,12 +108,12 @@ void ComputeFramegraph::init()
     m_pDrawKey->setValue(QStringLiteral("draw"));
 
     //Add Matches
-    m_pComputeFilter->addMatch(m_pComputeKey);
+    // m_pComputeFilter->addMatch(m_pComputeKey);
     m_pDrawFilter->addMatch(m_pDrawKey);
 
 
     //Set Memory Barrier
-    m_pMemoryBarrier->setWaitOperations(QMemoryBarrier::VertexAttributeArray);
+//    m_pMemoryBarrier->setWaitOperations(QMemoryBarrier::VertexAttributeArray);
 
     //Set Camera
 //    m_pCamera->setProjectionType(QCameraLens::PerspectiveProjection);

@@ -1,8 +1,8 @@
-#version 430 core
+#version 450 core
 
-out vec4 color;
+layout(location = 0) out vec4 color;
 
-in VertexBlock
+layout(location = 0) in VertexBlock
 {
     flat vec3 color;
     vec3 pos;
@@ -29,5 +29,6 @@ vec3 ads()
 
 void main(void)
 {
+    // color = vec4(1.0, 0.0, 0.0, 1.0);
     color = vec4(ads(), 1.0);
 }

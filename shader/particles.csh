@@ -1,8 +1,9 @@
-#version 430
+#version 450
 
-uniform float particleStep;
-uniform float finalCollisionFactor;
-
+layout(std140, binding = 0) uniform our_uniforms {
+    uniform float particleStep;
+    uniform float finalCollisionFactor;
+};
 
 layout (local_size_x = 1024) in;
 
@@ -14,7 +15,7 @@ struct ParticleData
 };
 
 // Particles from previouse frame
-layout (std430, binding = 0) coherent buffer Particles
+layout (std430, binding = 3) coherent buffer Particles
 {
     ParticleData particles[];
 };
