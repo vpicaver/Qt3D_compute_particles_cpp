@@ -1,0 +1,87 @@
+#version 450
+
+/*
+layout(std140, binding = 0) uniform qt3d_render_view_uniforms {
+  mat4 viewMatrix;
+  mat4 projectionMatrix;
+  mat4 uncorrectedProjectionMatrix;
+  mat4 clipCorrectionMatrix;
+  mat4 viewProjectionMatrix;
+  mat4 inverseViewMatrix;
+  mat4 inverseProjectionMatrix;
+  mat4 inverseViewProjectionMatrix;
+  mat4 viewportMatrix;
+  mat4 inverseViewportMatrix;
+  vec4 textureTransformMatrix;
+  vec3 eyePosition;
+  float aspectRatio;
+  float gamma;
+  float exposure;
+  float time;
+  float yUpInNDC;
+  float yUpInFBO;
+};
+
+layout(std140, binding = 1) uniform qt3d_command_uniforms {
+  mat4 modelMatrix;
+  mat4 inverseModelMatrix;
+  mat4 modelViewMatrix;
+  mat3 modelNormalMatrix;
+  mat4 inverseModelViewMatrix;
+  mat4 modelViewProjection;
+  mat4 inverseModelViewProjectionMatrix;
+};
+*/
+
+
+
+
+layout (local_size_x = 64) in;
+
+struct ParticleData
+{
+    vec4 position;
+    vec4 direction;
+    vec4 color;
+};
+
+// Particles from previouse frame
+layout (std430, binding = auto) coherent buffer Particles
+{
+    ParticleData particles[];
+};
+
+
+layout(std140, binding = auto) uniform our_uniforms {
+    float particleStep;
+    float finalCollisionFactor;
+    uint particleCount;
+};
+
+
+void main(void)
+{
+    uint globalId = gl_GlobalInvocationID.x;
+
+    if(globalId >= particleCount) {
+        return;
+    }
+
+
+    // Retrieve current particle from previous frame
+    ParticleData currentParticle = particles[globalId];
+
+    // New position = old position + distance traveled over step duration
+    currentParticle.position = currentParticle.position + currentParticle.direction * particleStep;
+
+
+    // Make acceleration more or less point toward the center of the scene
+    vec4 acceleration =  normalize(vec4(0.0) - currentParticle.position) * finalCollisionFactor;
+
+    // New velocity = old velocity + acceleration over step duration
+    currentParticle.direction = currentParticle.direction + acceleration * particleStep;
+
+
+    // Save updated particle
+    particles[globalId] = currentParticle;
+}

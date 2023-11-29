@@ -8,6 +8,10 @@ find_package(Qt6 COMPONENTS Core 3DCore 3DRender 3DInput 3DExtras Quick Qml REQU
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 set(PROJECT_SOURCES
     src/main.cpp
     src/computematerial.cpp
@@ -23,13 +27,18 @@ qt6_add_resources(PROJECT_RESOURCES_QRC
     compute-particles-cpp.qrc
 )
 
-# if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(Qt3D_compute_particles
-        ${PROJECT_SOURCES}
-        ${PROJECT_HEADERS}
-        ${PROJECT_RESOURCES_QRC}
-    )
+qt_add_executable(Qt3D_compute_particles
+    ${PROJECT_SOURCES}
+    ${PROJECT_HEADERS}
+    ${PROJECT_RESOURCES_QRC}
+)
 
+target_include_directories(Qt3D_compute_particles PRIVATE src)
+
+qt6_add_qml_module(Qt3D_compute_particles
+  URI compute_particles
+  VERSION 1.0
+)
 
 target_link_libraries(Qt3D_compute_particles
     PRIVATE

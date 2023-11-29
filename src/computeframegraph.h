@@ -105,6 +105,7 @@ private:
     QPointer<Qt3DRender::QClearBuffers> m_pClearBuffers;
 
     QPointer<Qt3DRender::QNoDraw> m_pNoDraw;
+    QPointer<Qt3DRender::QNoDraw> m_pNoDraw2;
 
     QPointer<Qt3DRender::QDispatchCompute> m_pDispatchCompute;
 
